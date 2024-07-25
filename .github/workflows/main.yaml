@@ -65,7 +65,7 @@ jobs:
         run: |
 
           chmod +x kli
-          ./kli semver -v
+          ./kli semver -t
   build_main:
     needs: create_tag
     runs-on: ubuntu-latest
