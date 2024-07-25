@@ -59,5 +59,5 @@ CHART_PATH="."
 CHART_NAME="your-chart"
 CHART_VALUES=$( cat values.yaml )
 KUBERNETES_NAMESPACE="default"
-docker run -it --rm karibu/gke-helm-deploy $PROJECT_ID $REGION $CLUSTER_NAME "$CREDENTIALS_JSON" $CHART_PATH $CHART_NAME $CHART_VALUES $KUBERNETES_NAMESPACE
+docker run -it --rm -v ./helm:/home/gke karibu/gke-helm-deploy $PROJECT_ID $REGION $CLUSTER_NAME "$CREDENTIALS_JSON" $CHART_PATH $CHART_NAME $CHART_VALUES $KUBERNETES_NAMESPACE
 ```
