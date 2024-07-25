@@ -34,7 +34,7 @@ outputs:
     description: "Helm chart revision"
 runs:
   using: "docker"
-  image: "docker://karibu/gke-helm-deploy:v0.3.0"
+  image: "docker://karibu/gke-helm-deploy:v0.4.2"
   args:
     - ${{ inputs.project_id }} # PROJECT_ID
     - ${{ inputs.region }} # REGION
