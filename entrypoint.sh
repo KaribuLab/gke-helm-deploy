@@ -7,6 +7,7 @@ CHART_PATH="$5"
 CHART_NAME="$6"
 CHART_VALUES="$7"
 KUBERNETES_NAMESPACE="$8"
+CHART_SET_VALUES="$9"
 WORKDIR=$(pwd)
 CREDENTIALS_JSON_PATH="${WORKDIR}/credentials.json"
 VALUES_DEPLOY_YAML_PATH="${WORKDIR}/values.deploy.yaml"
@@ -32,11 +33,21 @@ gcloud container clusters get-credentials ${CLUSTER_NAME} --region=${REGION} > /
 kubectl config set-context --current --namespace=${KUBERNETES_NAMESPACE} > /dev/null 2>&1 # Set the namespace
 installed_chart=$( helm list | grep ${CHART_NAME} | awk '{print $1}' ) # Check if the chart is already deployed
 if [ -z "$installed_chart" ]; then
-    echo "Installing chart: ${CHART_NAME}"
-    helm install ${CHART_NAME} ${CHART_PATH} -f ${VALUES_DEPLOY_YAML_PATH} # Install the chart
+    if [ -z "$CHART_SET_VALUES" ]; then
+        echo "Installing chart: ${CHART_NAME}"
+        helm install ${CHART_NAME} ${CHART_PATH} -f ${VALUES_DEPLOY_YAML_PATH} # Install the chart
+    else
+        echo "Installing chart with extra values: ${CHART_NAME}"
+        helm install ${CHART_NAME} ${CHART_PATH} -f ${VALUES_DEPLOY_YAML_PATH} --set ${CHART_SET_VALUES} # Install the chart
+    fi
 else
-    echo "Upgrading chart: ${CHART_NAME}"
-    helm upgrade ${CHART_NAME} ${CHART_PATH} -f ${VALUES_DEPLOY_YAML_PATH} # Upgrade the chart
+    if [ -z "$CHART_SET_VALUES" ]; then
+        echo "Upgrading chart: ${CHART_NAME}"
+        helm upgrade ${CHART_NAME} ${CHART_PATH} -f ${VALUES_DEPLOY_YAML_PATH} # Upgrade the chart
+    else
+        echo "Upgrading chart with extra values: ${CHART_NAME}"
+        helm upgrade ${CHART_NAME} ${CHART_PATH} -f ${VALUES_DEPLOY_YAML_PATH} --set ${CHART_SET_VALUES} # Upgrade the chart
+    fi
 fi
 rm -rf ${CREDENTIALS_JSON_PATH} # Clean up
 rm -rf ${VALUES_DEPLOY_YAML_PATH} # Clean up

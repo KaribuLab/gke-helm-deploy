@@ -25,6 +25,10 @@ inputs:
   namespace:
     description: "Kubernetes namespace"
     default: "default"
+  chart_set_values:
+    description: "Helm chart set values"
+    required: false
+    default: ""
 outputs:
   chart_revision: # Helm chart revision
     description: "Helm chart revision"

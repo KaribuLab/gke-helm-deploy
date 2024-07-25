@@ -16,6 +16,32 @@ GitHub Action used to deploy in GKE using Helm
 
 **Required** Google Cloud Kubernetes cluster name.
 
+## `credentials_json`
+
+**Required** Google Cloud service account JSON credentials
+
+## `chart_path`
+
+Helm Chart directory location (default `.`)
+
+## `chart_name`
+
+**Required** Chart name to be deployed
+
+## `namespace`
+
+Kubernetes namespace for Helm deployment (default `default`)
+
+## `chart_set_values`
+
+Helm deploy `--set` value arguments with comma separated (default ``).
+
+Example:
+
+```yaml
+chart_set_values: tag=v0.1.1,app=gke-gateway-api-example
+```
+
 ## Outputs
 
 ## `chart_revision`
@@ -68,5 +94,6 @@ docker run -it --rm -v $(pwd):/helm  -w /helm -e GITHUB_OUTPUT=/tmp/.github.outp
   "${CHART_PATH}" \
   "${CHART_NAME}" \
   "${CHART_VALUES}" \
-  "${KUBERNETES_NAMESPACE}"
+  "${KUBERNETES_NAMESPACE}" \
+  "tag=v0.1.1"
 ```
