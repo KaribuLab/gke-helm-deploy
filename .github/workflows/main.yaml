@@ -50,7 +50,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ssh-key: ${{ secrets.REKODI_SSH_KEY }}
+          ssh-key: ${{ secrets.KARIBU_SSH_KEY }}
       - name: Set up Git user
         run: |
           git config --global user.name "github-actions[bot]"
@@ -65,7 +65,7 @@ jobs:
         run: |
 
           chmod +x kli
-          ./kli semver -tv
+          ./kli semver -v
   build_main:
     needs: create_tag
     runs-on: ubuntu-latest
