@@ -15,10 +15,10 @@ echo "Using chart: ${CHART_NAME} in path ${CHART_PATH} with values ${CHART_VALUE
 echo "Using namespace: ${KUBERNETES_NAMESPACE}"
 echo "$credentials_json" > ${CREDENTIALS_JSON_PATH}
 echo "$CHART_VALUES" > ${VALUES_DEPLOY_YAML_PATH}
-gcloud config set disable_prompts true
-gcloud auth activate-service-account --key-file=${CREDENTIALS_JSON_PATH} # Authenticate with the service account
-gcloud config set project ${PROJECT_ID} # Set the project ID
-gcloud container clusters get-credentials ${CLUSTER_NAME} --region=${REGION} # Set the cluster and region
+gcloud config set disable_prompts true > /dev/null 2>&1 # Disable prompts
+gcloud auth activate-service-account --key-file=${CREDENTIALS_JSON_PATH} > /dev/null 2>&1 # Authenticate with the service account
+gcloud config set project ${PROJECT_ID} > /dev/null 2>&1 # Set the project ID
+gcloud container clusters get-credentials ${CLUSTER_NAME} --region=${REGION} > /dev/null 2>&1 # Set the cluster and region
 kubectl config set-context --current --namespace=${KUBERNETES_NAMESPACE} # Set the namespace
 installed_chart=$( helm list | grep ${CHART_NAME} | awk '{print $1}' ) # Check if the chart is already deployed
 if [ -z "$installed_chart" ]; then
