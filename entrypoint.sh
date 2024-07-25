@@ -11,7 +11,10 @@ WORKDIR=/home/gke
 CREDENTIALS_JSON_PATH="${WORKDIR}/credentials.json"
 VALUES_DEPLOY_YAML_PATH="${WORKDIR}/values.deploy.yaml"
 echo "Deploying to GKE cluster ${CLUSTER_NAME} in project ${PROJECT_ID} in region ${REGION}"
-echo "Using chart: ${CHART_NAME} in path ${CHART_PATH} with values ${CHART_VALUES}"
+echo "Using chart ${CHART_NAME} in path ${CHART_PATH} with values:"
+echo "------------------------------------------------------------------------"
+echo "${CHART_VALUES}"
+echo "------------------------------------------------------------------------"
 echo "Using namespace: ${KUBERNETES_NAMESPACE}"
 echo "$credentials_json" > ${CREDENTIALS_JSON_PATH}
 echo "$CHART_VALUES" > ${VALUES_DEPLOY_YAML_PATH}
