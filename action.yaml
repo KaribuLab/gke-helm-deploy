@@ -1,0 +1,42 @@
+name: "GKE Helm Deploy"
+description: "Google Cloud Kubernetes Engine Helm deploy action"
+inputs:
+  project_id:
+    description: "Google Cloud Project ID"
+    required: true
+  region:
+    description: "Google Cloud region"
+    required: true
+  cluster_name:
+    description: "Google Cloud Kubernetes cluster name"
+    required: true
+  credentials_json:
+    description: "Google Cloud service account credentials JSON"
+    required: true
+  chart_path:
+    description: "Helm chart path"
+    default: "."
+  chart_name:
+    description: "Helm chart name"
+    required: true
+  chart_values:
+    description: "Helm chart values file"
+    required: true
+  namespace:
+    description: "Kubernetes namespace"
+    default: "default"
+outputs:
+  chart_revision: # Helm chart revision
+    description: "Helm chart revision"
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  args:
+    - ${{ inputs.project_id }} # PROJECT_ID
+    - ${{ inputs.region }} # REGION
+    - ${{ inputs.cluster_name }} # CLUSTER_NAME
+    - ${{ inputs.credentials_json }} # credentials_json
+    - ${{ inputs.chart_path }} # CHART_PATH
+    - ${{ inputs.chart_name }} # CHART_NAME
+    - ${{ inputs.chart_values }} # CHART_VALUES
+    - ${{ inputs.namespace }} # KUBERNETES_NAMESPACE
