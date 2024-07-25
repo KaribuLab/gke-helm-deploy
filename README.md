@@ -24,16 +24,23 @@ Helm chart revision.
 
 ## Example usage
 
-uses: actions/hello-world-docker-action@v2
-with:
-  project_id:
-  region:
-  cluster_name:
-  credentials_json: ${{ secrets.CREDENTIALS_JSON }}
-  chart_path: "."
-  chart_name:
-  chart_values: 
-  namespace: "default"
+```yaml
+uses: KaribuLab/gke-helm-deploy@v0.1.0
+  with:
+    project_id: ${{ secrets.GKE_PROJECT_ID }}
+    region: ${{ secrets.GKE_REGION }}
+    cluster_name: ${{ secrets.GKE_CLUSTER_NAME }}
+    credentials_json: ${{ secrets.GKE_CREDENTIALS }}
+    chart_path: helm
+    chart_name: gke-gateway-api-example
+    chart_values: |
+      image: karibu/gke-gateway-api-example
+      tag: v0.1.1
+      namespace: ${{ secrets.GKE_NAMESPACE }}
+      app: gke-gateway-api-example
+      port: 1323
+      healthPath: /health
+```
 
 ## Development
 
