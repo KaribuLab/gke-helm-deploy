@@ -44,3 +44,4 @@ runs:
     - ${{ inputs.chart_name }} # CHART_NAME
     - ${{ inputs.chart_values }} # CHART_VALUES
     - ${{ inputs.namespace }} # KUBERNETES_NAMESPACE
+    - ${{ inputs.chart_set_values }} # CHART_SET_VALUES

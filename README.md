@@ -61,11 +61,11 @@ uses: KaribuLab/gke-helm-deploy@v0.1.0
     chart_name: gke-gateway-api-example
     chart_values: |
       image: karibu/gke-gateway-api-example
-      tag: v0.1.1
       namespace: ${{ secrets.GKE_NAMESPACE }}
       app: gke-gateway-api-example
       port: 1323
       healthPath: /health
+    chart_set_values: tag=v0.1.1
 ```
 
 ## Development
