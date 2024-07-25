@@ -31,5 +31,7 @@ else
     echo "Upgrading chart: ${CHART_NAME}"
     helm upgrade ${CHART_NAME} ${CHART_PATH} -f ${VALUES_DEPLOY_YAML_PATH} # Upgrade the chart
 fi
+rm -rf ${CREDENTIALS_JSON_PATH} # Clean up
+rm -rf ${VALUES_DEPLOY_YAML_PATH} # Clean up
 chart_revision=$( helm list --deployed | grep ${CHART_NAME} | awk '{print $3}' ) # Check if the chart is already deployed
 echo "chart_revision=$chart_revision" >> $GITHUB_OUTPUT
