@@ -54,10 +54,19 @@ docker build -t karibu/gke-helm-deploy .
 PROJECT_ID="your-gcp-project-id"
 REGION="us-central1"
 CLUSTER_NAME="your-gke-cluster-name"
-CREDENTIALS_FILE=$( cat credentials.json )
-CHART_PATH="."
+CREDENTIALS_JSON=$( cat credentials.json )
+CHART_PATH="helm"
 CHART_NAME="your-chart"
 CHART_VALUES=$( cat values.yaml )
 KUBERNETES_NAMESPACE="default"
-docker run -it --rm -v ./helm:/home/gke karibu/gke-helm-deploy $PROJECT_ID $REGION $CLUSTER_NAME "$CREDENTIALS_JSON" $CHART_PATH $CHART_NAME $CHART_VALUES $KUBERNETES_NAMESPACE
+docker run -it --rm -v $(pwd):/helm  -w /helm -e GITHUB_OUTPUT=/tmp/.github.output \
+  karibu/gke-helm-deploy \
+  "${PROJECT_ID}" \
+  "${REGION}" \
+  "${CLUSTER_NAME}" \
+  "${CREDENTIALS_JSON}" \
+  "${CHART_PATH}" \
+  "${CHART_NAME}" \
+  "${CHART_VALUES}" \
+  "${KUBERNETES_NAMESPACE}"
 ```

@@ -14,20 +14,15 @@ RUN apk add --no-cache curl python3 ca-certificates bash && \
     mv kubectl /usr/local/bin/kubectl && \
     chmod +x /usr/local/bin/kubectl && \
     chmod +x /entrypoint.sh && \
-    /google-cloud-sdk/bin/gcloud components install gke-gcloud-auth-plugin && \
-    addgroup --gid 1000 gke && adduser -S --uid 1000 gke -G gke && chown -R gke:gke /home/gke
+    /google-cloud-sdk/bin/gcloud components install gke-gcloud-auth-plugin
 
 SHELL ["/bin/bash", "-c"]
 
 RUN source /google-cloud-sdk/completion.bash.inc && \
     source /google-cloud-sdk/path.bash.inc && \
-    echo "source /google-cloud-sdk/completion.bash.inc" >> /home/gke/.bashrc && \
-    echo "source /google-cloud-sdk/path.bash.inc" >> /home/gke/.bashrc
+    echo "source /google-cloud-sdk/completion.bash.inc" >> /root/.bashrc && \
+    echo "source /google-cloud-sdk/path.bash.inc" >> /root/.bashrc
 
 ENV PATH="/google-cloud-sdk/bin:${PATH}"
-
-USER gke
-
-WORKDIR /home/gke
 
 ENTRYPOINT [ "/entrypoint.sh" ]
