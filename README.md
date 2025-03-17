@@ -52,20 +52,20 @@ Helm chart revision.
 
 ```yaml
 uses: KaribuLab/gke-helm-deploy@v0.1.0
-  with:
-    project_id: ${{ secrets.GKE_PROJECT_ID }}
-    region: ${{ secrets.GKE_REGION }}
-    cluster_name: ${{ secrets.GKE_CLUSTER_NAME }}
-    credentials_json: ${{ secrets.GKE_CREDENTIALS }}
-    chart_path: helm
-    chart_name: gke-gateway-api-example
-    chart_values: |
-      image: karibu/gke-gateway-api-example
-      namespace: ${{ secrets.GKE_NAMESPACE }}
-      app: gke-gateway-api-example
-      port: 1323
-      healthPath: /health
-    chart_set_values: tag=v0.1.1
+with:
+  project_id: ${{ secrets.GKE_PROJECT_ID }}
+  region: ${{ secrets.GKE_REGION }}
+  cluster_name: ${{ secrets.GKE_CLUSTER_NAME }}
+  credentials_json: ${{ secrets.GKE_CREDENTIALS }}
+  chart_path: helm
+  chart_name: gke-gateway-api-example
+  chart_values: |
+    image: karibu/gke-gateway-api-example
+    namespace: ${{ secrets.GKE_NAMESPACE }}
+    app: gke-gateway-api-example
+    port: 1323
+    healthPath: /health
+  chart_set_values: tag=v0.1.1
 ```
 
 ## Development
