@@ -24,10 +24,15 @@ echo "------------------------------------------------------------------------"
 echo "${CHART_VALUES}"
 echo "------------------------------------------------------------------------"
 echo "Using namespace: ${KUBERNETES_NAMESPACE}"
-echo "$credentials_json" > ${CREDENTIALS_JSON_PATH}
 echo "$CHART_VALUES" > ${VALUES_DEPLOY_YAML_PATH}
 gcloud config set disable_prompts true > /dev/null 2>&1 # Disable prompts
-gcloud auth activate-service-account --key-file=${CREDENTIALS_JSON_PATH} > /dev/null 2>&1 # Authenticate with the service account
+if [ -n "$credentials_json" ]; then
+    echo "Authenticating with JSON key..."
+    echo "$credentials_json" > ${CREDENTIALS_JSON_PATH}
+    gcloud auth activate-service-account --key-file=${CREDENTIALS_JSON_PATH} > /dev/null 2>&1 # Authenticate with the service account
+else
+    echo "Skipping JSON auth (assuming OIDC authentication is already in place)..." # Skip JSON auth if OIDC authentication is already in place
+fi
 gcloud config set project ${PROJECT_ID} > /dev/null 2>&1 # Set the project ID
 gcloud container clusters get-credentials ${CLUSTER_NAME} --region=${REGION} > /dev/null 2>&1 # Set the cluster and region
 kubectl config set-context --current --namespace=${KUBERNETES_NAMESPACE} > /dev/null 2>&1 # Set the namespace

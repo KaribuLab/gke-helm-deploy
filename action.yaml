@@ -12,7 +12,8 @@ inputs:
     required: true
   credentials_json:
     description: "Google Cloud service account credentials JSON"
-    required: true
+    required: false
+    default: ""
   chart_path:
     description: "Helm chart path"
     default: "."
