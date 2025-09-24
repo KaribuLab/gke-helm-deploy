@@ -20,6 +20,8 @@ GitHub Action used to deploy in GKE using Helm
 
 **Required** Google Cloud service account JSON credentials
 
+**Nota:** Este parámetro no es requerido si utilizas autenticación OIDC con `google-github-actions/auth`. Ver la sección de ejemplo con OIDC más abajo.
+
 ## `chart_path`
 
 Helm Chart directory location (default `.`)
@@ -66,6 +68,34 @@ with:
     port: 1323
     healthPath: /health
   chart_set_values: tag=v0.1.1
+```
+
+## Ejemplo de uso con autenticación OIDC
+
+```yaml
+- id: 'auth'
+  name: 'Authenticate to Google Cloud'
+  uses: 'google-github-actions/auth@v3'
+  with:
+    token_format: 'access_token'
+    workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+    service_account: 'github-sa@my-project.iam.gserviceaccount.com'
+
+- uses: KaribuLab/gke-helm-deploy@v0.1.0
+  with:
+    project_id: ${{ secrets.GKE_PROJECT_ID }}
+    region: ${{ secrets.GKE_REGION }}
+    cluster_name: ${{ secrets.GKE_CLUSTER_NAME }}
+    # credentials_json no es necesario cuando se usa OIDC
+    chart_path: helm
+    chart_name: gke-gateway-api-example
+    chart_values: |
+      image: karibu/gke-gateway-api-example
+      namespace: ${{ secrets.GKE_NAMESPACE }}
+      app: gke-gateway-api-example
+      port: 1323
+      healthPath: /health
+    chart_set_values: tag=v0.1.1
 ```
 
 ## Development
