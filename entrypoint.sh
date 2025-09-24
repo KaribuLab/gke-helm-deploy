@@ -8,6 +8,7 @@ CHART_NAME="$6"
 CHART_VALUES="$7"
 KUBERNETES_NAMESPACE="$8"
 CHART_SET_VALUES="$9"
+CHART_VALUES_FILE="$10"
 WORKDIR=$(pwd)
 CREDENTIALS_JSON_PATH="${WORKDIR}/credentials.json"
 VALUES_DEPLOY_YAML_PATH="${WORKDIR}/values.deploy.yaml"
@@ -24,7 +25,13 @@ echo "------------------------------------------------------------------------"
 echo "${CHART_VALUES}"
 echo "------------------------------------------------------------------------"
 echo "Using namespace: ${KUBERNETES_NAMESPACE}"
-echo "$CHART_VALUES" > ${VALUES_DEPLOY_YAML_PATH}
+if [ -n "$CHART_VALUES_FILE" ]; then
+    echo "Using chart values file: ${CHART_VALUES_FILE}"
+    echo "$(cat ${CHART_VALUES_FILE})" > ${VALUES_DEPLOY_YAML_PATH}
+else
+    echo "Using chart values: ${CHART_VALUES}"
+    echo "$CHART_VALUES" > ${VALUES_DEPLOY_YAML_PATH}
+fi
 gcloud config set disable_prompts true > /dev/null 2>&1 # Disable prompts
 if [ -n "$credentials_json" ]; then
     echo "Authenticating with JSON key..."

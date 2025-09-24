@@ -21,8 +21,13 @@ inputs:
     description: "Helm chart name"
     required: true
   chart_values:
-    description: "Helm chart values file"
-    required: true
+    description: "Helm chart values file content"
+    required: false
+    default: ""
+  chart_values_file:
+    description: "Helm chart values file path"
+    required: false
+    default: ""
   namespace:
     description: "Kubernetes namespace"
     default: "default"
@@ -46,3 +51,4 @@ runs:
     - ${{ inputs.chart_values }} # CHART_VALUES
     - ${{ inputs.namespace }} # KUBERNETES_NAMESPACE
     - ${{ inputs.chart_set_values }} # CHART_SET_VALUES
+    - ${{ inputs.chart_values_file }} # CHART_VALUES_FILE

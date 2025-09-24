@@ -34,6 +34,18 @@ Helm Chart directory location (default `.`)
 
 Kubernetes namespace for Helm deployment (default `default`)
 
+## `chart_values_file`
+
+Ruta al archivo de valores de Helm (values file). Si se proporciona, se utilizará en lugar de `chart_values` (default ``).
+
+**Nota:** Si se proporciona `chart_values_file`, tendrá prioridad sobre `chart_values`.
+
+Ejemplo:
+
+```yaml
+chart_values_file: helm/values.yaml
+```
+
 ## `chart_set_values`
 
 Helm deploy `--set` value arguments with comma separated (default ``).
@@ -67,6 +79,21 @@ with:
     app: gke-gateway-api-example
     port: 1323
     healthPath: /health
+  chart_set_values: tag=v0.1.1
+```
+
+### Ejemplo usando archivo de valores
+
+```yaml
+uses: KaribuLab/gke-helm-deploy@v0.1.0
+with:
+  project_id: ${{ secrets.GKE_PROJECT_ID }}
+  region: ${{ secrets.GKE_REGION }}
+  cluster_name: ${{ secrets.GKE_CLUSTER_NAME }}
+  credentials_json: ${{ secrets.GKE_CREDENTIALS }}
+  chart_path: helm
+  chart_name: gke-gateway-api-example
+  chart_values_file: helm/values.yaml
   chart_set_values: tag=v0.1.1
 ```
 
