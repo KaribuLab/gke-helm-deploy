@@ -43,7 +43,8 @@ fi
 gcloud config set project ${PROJECT_ID} > /dev/null 2>&1 # Set the project ID
 gcloud container clusters get-credentials ${CLUSTER_NAME} --region=${REGION} > /dev/null 2>&1 # Set the cluster and region
 kubectl config set-context --current --namespace=${KUBERNETES_NAMESPACE} > /dev/null 2>&1 # Set the namespace
-installed_chart=$( helm list | grep ${CHART_NAME} | awk '{print $1}' ) # Check if the chart is already deployed
+HELM_LIST="helm list --short --no-headers --filter \"^${CHART_NAME}\$\""
+installed_chart=$( eval $HELM_LIST ) # Check if the chart is already deployed
 if [ -z "$installed_chart" ]; then
     if [ -z "$CHART_SET_VALUES" ]; then
         echo "Installing chart: ${CHART_NAME}"
@@ -67,5 +68,5 @@ fi
 if [ -n "$CHART_VALUES" ]; then
     rm -rf ${VALUES_DEPLOY_YAML_PATH} # Clean up
 fi
-chart_revision=$( helm list --deployed | grep ${CHART_NAME} | awk '{print $3}' ) # Check if the chart is already deployed
+chart_revision=$( eval "${HELM_LIST} --deployed" ) # Check if the chart is already deployed
 echo "chart_revision=$chart_revision" >> $GITHUB_OUTPUT
