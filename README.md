@@ -56,6 +56,23 @@ Example:
 chart_set_values: tag=v0.1.1,app=gke-gateway-api-example
 ```
 
+## `verbose`
+
+Habilita el modo verbose para mostrar la salida de los comandos de `gcloud` y `kubectl` (default `false`).
+
+Cuando está habilitado, se mostrará la salida completa de:
+- `gcloud config set disable_prompts`
+- `gcloud auth activate-service-account`
+- `gcloud config set project`
+- `gcloud container clusters get-credentials`
+- `kubectl config set-context`
+
+Example:
+
+```yaml
+verbose: "true"
+```
+
 ## Outputs
 
 ## `chart_revision`
@@ -65,7 +82,7 @@ Helm chart revision.
 ## Example usage
 
 ```yaml
-uses: KaribuLab/gke-helm-deploy@v0.1.0
+uses: KaribuLab/gke-helm-deploy@v0.8.0
 with:
   project_id: ${{ secrets.GKE_PROJECT_ID }}
   region: ${{ secrets.GKE_REGION }}
@@ -80,12 +97,13 @@ with:
     port: 1323
     healthPath: /health
   chart_set_values: tag=v0.1.1
+  verbose: "false"  # Opcional: muestra la salida de comandos gcloud y kubectl
 ```
 
 ### Ejemplo usando archivo de valores
 
 ```yaml
-uses: KaribuLab/gke-helm-deploy@v0.1.0
+uses: KaribuLab/gke-helm-deploy@v0.8.0
 with:
   project_id: ${{ secrets.GKE_PROJECT_ID }}
   region: ${{ secrets.GKE_REGION }}
@@ -95,6 +113,27 @@ with:
   chart_name: gke-gateway-api-example
   chart_values_file: helm/values.yaml
   chart_set_values: tag=v0.1.1
+  verbose: "false"  # Opcional: muestra la salida de comandos gcloud y kubectl
+```
+
+### Ejemplo con modo verbose habilitado
+
+```yaml
+uses: KaribuLab/gke-helm-deploy@v0.8.0
+with:
+  project_id: ${{ secrets.GKE_PROJECT_ID }}
+  region: ${{ secrets.GKE_REGION }}
+  cluster_name: ${{ secrets.GKE_CLUSTER_NAME }}
+  credentials_json: ${{ secrets.GKE_CREDENTIALS }}
+  chart_path: helm
+  chart_name: gke-gateway-api-example
+  chart_values: |
+    image: karibu/gke-gateway-api-example
+    namespace: ${{ secrets.GKE_NAMESPACE }}
+    app: gke-gateway-api-example
+    port: 1323
+    healthPath: /health
+  verbose: "true"  # Muestra la salida completa de comandos gcloud y kubectl
 ```
 
 ## Ejemplo de uso con autenticación OIDC
@@ -108,7 +147,7 @@ with:
     workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
     service_account: 'github-sa@my-project.iam.gserviceaccount.com'
 
-- uses: KaribuLab/gke-helm-deploy@v0.1.0
+- uses: KaribuLab/gke-helm-deploy@v0.8.0
   with:
     project_id: ${{ secrets.GKE_PROJECT_ID }}
     region: ${{ secrets.GKE_REGION }}
@@ -123,6 +162,7 @@ with:
       port: 1323
       healthPath: /health
     chart_set_values: tag=v0.1.1
+    verbose: "false"  # Opcional: muestra la salida de comandos gcloud y kubectl
 ```
 
 ## Development
@@ -142,6 +182,9 @@ CHART_PATH="helm"
 CHART_NAME="your-chart"
 CHART_VALUES=$( cat values.yaml )
 KUBERNETES_NAMESPACE="default"
+CHART_SET_VALUES="tag=v0.1.1"
+CHART_VALUES_FILE=""
+VERBOSE="false"  # Opcional: "true" para modo verbose
 docker run -it --rm -v $(pwd):/helm  -w /helm -e GITHUB_OUTPUT=/tmp/.github.output \
   karibu/gke-helm-deploy \
   "${PROJECT_ID}" \
@@ -152,5 +195,7 @@ docker run -it --rm -v $(pwd):/helm  -w /helm -e GITHUB_OUTPUT=/tmp/.github.outp
   "${CHART_NAME}" \
   "${CHART_VALUES}" \
   "${KUBERNETES_NAMESPACE}" \
-  "tag=v0.1.1"
+  "${CHART_SET_VALUES}" \
+  "${CHART_VALUES_FILE}" \
+  "${VERBOSE}"
 ```
