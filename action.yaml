@@ -35,12 +35,16 @@ inputs:
     description: "Helm chart set values"
     required: false
     default: ""
+  verbose:
+    description: "Enable verbose mode to show gcloud and kubectl command output"
+    required: false
+    default: "false"
 outputs:
   chart_revision: # Helm chart revision
     description: "Helm chart revision"
 runs:
   using: "docker"
-  image: "docker://karibu/gke-helm-deploy:v0.6.2"
+  image: "docker://karibu/gke-helm-deploy:v0.7.2"
   args:
     - ${{ inputs.project_id }} # PROJECT_ID
     - ${{ inputs.region }} # REGION
@@ -52,3 +56,4 @@ runs:
     - ${{ inputs.namespace }} # KUBERNETES_NAMESPACE
     - ${{ inputs.chart_set_values }} # CHART_SET_VALUES
     - ${{ inputs.chart_values_file }} # CHART_VALUES_FILE
+    - ${{ inputs.verbose }} # VERBOSE

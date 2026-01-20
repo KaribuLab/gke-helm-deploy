@@ -9,10 +9,23 @@ CHART_VALUES="${7}"
 KUBERNETES_NAMESPACE="${8}"
 CHART_SET_VALUES="${9}"
 CHART_VALUES_FILE="${10}"
+VERBOSE="${11}"
 WORKDIR=$(pwd)
+
+# Función para ejecutar comandos con o sin salida según el modo verbose
+run_cmd() {
+    if [ "$VERBOSE" = "true" ]; then
+        "$@"
+    else
+        "$@" > /dev/null 2>&1
+    fi
+}
 CREDENTIALS_JSON_PATH="${WORKDIR}/credentials.json"
 VALUES_DEPLOY_YAML_PATH="${WORKDIR}/values.deploy.yaml"
 echo "Working directory: ${WORKDIR}"
+if [ "$VERBOSE" = "true" ]; then
+    echo "Verbose mode: enabled"
+fi
 if [ -d "${CHART_PATH}" ]; then
     echo "Chart path exists: ${CHART_PATH}"
 else
@@ -32,17 +45,17 @@ else
     echo "Using chart values: ${CHART_VALUES}"
     echo "$CHART_VALUES" > ${VALUES_DEPLOY_YAML_PATH}
 fi
-gcloud config set disable_prompts true > /dev/null 2>&1 # Disable prompts
+run_cmd gcloud config set disable_prompts true # Disable prompts
 if [ -n "$credentials_json" ]; then
     echo "Authenticating with JSON key..."
     echo "$credentials_json" > ${CREDENTIALS_JSON_PATH}
-    gcloud auth activate-service-account --key-file=${CREDENTIALS_JSON_PATH} > /dev/null 2>&1 # Authenticate with the service account
+    run_cmd gcloud auth activate-service-account --key-file=${CREDENTIALS_JSON_PATH} # Authenticate with the service account
 else
     echo "Skipping JSON auth (assuming OIDC authentication is already in place)..." # Skip JSON auth if OIDC authentication is already in place
 fi
-gcloud config set project ${PROJECT_ID} > /dev/null 2>&1 # Set the project ID
-gcloud container clusters get-credentials ${CLUSTER_NAME} --region=${REGION} > /dev/null 2>&1 # Set the cluster and region
-kubectl config set-context --current --namespace=${KUBERNETES_NAMESPACE} > /dev/null 2>&1 # Set the namespace
+run_cmd gcloud config set project ${PROJECT_ID} # Set the project ID
+run_cmd gcloud container clusters get-credentials ${CLUSTER_NAME} --region=${REGION} # Set the cluster and region
+run_cmd kubectl config set-context --current --namespace=${KUBERNETES_NAMESPACE} # Set the namespace
 HELM_LIST="helm list --short --no-headers --filter \"^${CHART_NAME}\$\""
 installed_chart=$( eval $HELM_LIST ) # Check if the chart is already deployed
 if [ -z "$installed_chart" ]; then
