@@ -1,4 +1,7 @@
 #!/bin/bash
+set -e # Terminar el script si algún comando falla
+set -o pipefail # Propagar errores en pipes
+
 PROJECT_ID="${1}"
 REGION="${2}"
 CLUSTER_NAME="${3}"
